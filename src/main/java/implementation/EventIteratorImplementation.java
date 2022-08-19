@@ -4,6 +4,7 @@
  */
 package implementation;
 
+import static com.sun.beans.introspect.ClassInfo.clear;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -61,6 +62,7 @@ public class EventIteratorImplementation implements EventIterator {
 
     @Override
     public void close() throws Exception {
+        clear();
     }
 
     @Override
