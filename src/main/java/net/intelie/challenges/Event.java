@@ -11,12 +11,15 @@ public class Event {
         this.type = type;
         this.timestamp = timestamp;
     }
-
     public String type() {
         return type;
     }
 
     public long timestamp() {
         return timestamp;
+    }
+    @Override
+    public String toString(){
+        return "(Type: " + type + ", Timestamp: " + timestamp +")";
     }
 }
