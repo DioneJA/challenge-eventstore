@@ -1,53 +1,33 @@
-# Implement EventStore
+<h1> Introduction</h1>
+<p>This challenge was performed 100% in Java. Here will be a brief description of the implemented methods and usage instructions.</p>
 
-In this challenge, you will create a class that implements the `EventStore` 
-interface.
- 
-```java
-public interface EventStore {
-    void insert(Event event);
+<h2> Class: EventStoreImplementation </h2>
+<p>In this class, I used a Synchronized ArrayList for thread safe. It has an empty constructor and one with the possibility of sending a list of events.</p>
 
-    void removeAll(String type);
+<h3> Methods of EventStoreImplementation</h3>
+<p><b>getEventArray():</b> Returns the eventArray event list.</p>
+<p><b>Insert(): </b>Inserts one event at a time into the eventArray list. If it is not null.</p>
+<p><b>RemoveAll(): </b>It traverses the list using an iterator within a synchronized block and removes all events of a given type, passed by parameter.</p>
+<p><b>Query(): </b>It goes through the list and filters the events that fit the parameters using lambda expression, adding them to the EventIterator class.</p>
 
-    EventIterator query(String type, long startTime, long endTime);
-}
-```
-
-Your implementation should store events in memory, using any data structures 
-you see fit for the task. The required behavior for the interface is described in the
-provided code javadocs, please see `EventStore` and `EventIterator`
-interfaces inside the `src/main/java` directory.
- 
-The implementation should be correct, fast, memory-efficient, and thread-safe. 
-You may consider that insertions, deletions, queries, and iterations 
-will happen frequently and concurrently. This will be a system hotspot. Optimize at will. 
-
-We expect you to:
-* Write tests;
-* Provide some evidence of thread-safety;
-* Justify design choices, arguing about costs 
-  and benefits involved. You may write those as comments 
-  inline or, if you wish, provide a separate document 
-  summarizing those choices;
-* Write all code and documentation in english.
+<h2> Class: EventIteratorImplementation</h2>
+<p>In this class, I used a Synchronized ArrayList for thread safe.<p>
   
-You may use external libraries, but their use has to be 
-properly justified as well.
- 
-This challenge is intentionally simple, we expect a simple,
-elegant, and polished solution. There is no unique solution to this challenge. 
-The intent is to evaluate candidate's coding proficiency and familiarity with 
-tools and best practices.
+<h3> Methods of EventIteratorImplementation</h3>
+<p><b>Insert(): </b>Inserts one event at a time into the filtredList list. If it is not null.</p>
+<p><b>getFiltredList():</b> Returns the filtredList event list.</p>
+<p><b>moveNext(): </b>The class uses a Position variable to know which position it is in at the moment, if this method is called the Position variable receives +1 and returns true. If the position reaches the size of the list, it returns false and does not add +1 to the variable.</p>
+<p><b>current(): </b>Returns the current event based on the Position variable present in the class.</p>
+<p><b>remove(): </b>Remove the current event based on the Position variable.</p>
+<p><b>close(): </b>Clear the class.</p>
 
+<h2>Main class: Program</h2>
+<p>In this class some tests are performed using the classes that were implemented.</p>
 
-## Solve this challenge
+<h2> No pacote TestPackages: Foram adicionadas duas classses de testes. </h2>
+<h3> EventStoreTest: </h3>
+<p> Here contains tests for all methods of the EventStoreImplmentation class.</p>
+<h3>EventIteratorTest: </h3>
+<p>Here contains tests for all methods of the EventIteratorImplementation class.</p>
 
-To solve this challenge, you may fork this repository, then 
-send us a link with your implementation. Alternatively, if you do not want to have this repo on
-your profile (we totally get it), send us a 
-[git patch file](https://www.devroom.io/2009/10/26/how-to-create-and-apply-a-patch-with-git/) 
-with your changes.
-
-If you are already in the hiring process, you may send it to 
- whoever is your contact at Intelie. If you wish to apply for a job at 
- Intelie, please send your solution to [trabalhe@intelie.com.br](mailto:trabalhe@intelie.com.br).
+<b>To test the program, just make changes to the main class or test classes.</b>
