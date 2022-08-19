@@ -38,7 +38,6 @@ public class Program {
         System.out.println("\n\nPrinting all object in EventIterator after filter: ");
         while (evtII.moveNext()) {//Printing object EventIterator after fillter
             System.out.println(evtII.current());
-
         }
     }
 }

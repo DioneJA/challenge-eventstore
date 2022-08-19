@@ -31,7 +31,11 @@ public class EventIteratorImplementation implements EventIterator {
     }
 
     public void insert(Event evt) {
-        filtredList.add(evt);
+        if (evt != null) {
+            filtredList.add(evt);
+        } else {
+            return;
+        }
     }
 
     @Override
