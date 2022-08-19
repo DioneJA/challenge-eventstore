@@ -18,7 +18,7 @@ import net.intelie.challenges.EventStore;
  */
 public class EventStoreImplementation implements EventStore {
 
-    private final List<Event> eventArray = Collections.synchronizedList(new ArrayList<>()); //Make in syncronizedList for Thread Safe
+    private final List<Event> eventArray = Collections.synchronizedList(new ArrayList<>()); //Make in syncronizedList for Thread Safe, array list for performance
 
     //Constructor's
     public EventStoreImplementation(List eventList) {
@@ -44,11 +44,14 @@ public class EventStoreImplementation implements EventStore {
 
     @Override
     public void removeAll(String type) { //Cycling through the event arraylist and removing events of a type
-        Iterator itr = eventArray.iterator();
-        while (itr.hasNext()) {//traversing with iterator
-            Event evt = (Event) itr.next();
-            if (evt.type().equals(type)) {
-                itr.remove();
+
+        synchronized (eventArray) {
+            Iterator itr = eventArray.iterator();
+            while (itr.hasNext()) {//traversing with iterator
+                Event evt = (Event) itr.next();
+                if (evt.type().equals(type)) {
+                    itr.remove();
+                }
             }
         }
 
@@ -62,7 +65,7 @@ public class EventStoreImplementation implements EventStore {
         * @param getEventArray().*/
 
         EventIteratorImplementation evtImp = new EventIteratorImplementation();
-        getEventArray().stream().filter(x -> (x.type().equals(type) && x.timestamp() >= startTime && x.timestamp() < endTime)).forEachOrdered(x -> {
+        getEventArray().stream().filter(x -> (x.type().equals(type) && x.timestamp() >= startTime && x.timestamp() < endTime)).forEachOrdered(x -> {//inserting events into EventIterator based on filtering
             evtImp.insert(x);
         });
         return evtImp;
