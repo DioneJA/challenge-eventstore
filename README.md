@@ -24,7 +24,7 @@
 <h2>Main class: Program</h2>
 <p>In this class some tests are performed using the classes that were implemented.</p>
 
-<h2> No pacote TestPackages: Foram adicionadas duas classses de testes. </h2>
+<h2> In the TestPackages package: Two test classes were added: </h2>
 <h3> EventStoreTest: </h3>
 <p> Here contains tests for all methods of the EventStoreImplmentation class.</p>
 <h3>EventIteratorTest: </h3>
