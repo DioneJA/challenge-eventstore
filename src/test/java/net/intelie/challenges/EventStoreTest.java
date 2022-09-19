@@ -4,54 +4,70 @@
  */
 package net.intelie.challenges;
 
-import implementation.EventIteratorImplementation;
-import implementation.EventStoreImplementation;
-import static org.junit.Assert.assertEquals;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.junit.Test;
+
+import CodeImp.EventException;
+import CodeImp.EventStoreImplementation;
 
 /**
  *
  * @author bruno
  */
 public class EventStoreTest {
+	@Test(expected = EventException.class)
+	public void testInserctionOfEventFail(){
+		final EventStoreImplementation evtS = new EventStoreImplementation();
+		final Event evt = null;
 
-    @Test
-    public void insert() {
-        EventStoreImplementation evt = new EventStoreImplementation();
-        evt.insert(new Event("Type1", 1L));
-        assertEquals("Type1", evt.getEventArray().get(0).type());
-        assertEquals(1L, evt.getEventArray().get(0).timestamp());
-    }
-
-    @Test
-    public void removeAll() {
-        EventStoreImplementation evt = new EventStoreImplementation();
-        evt.insert(new Event("Type1", 1L));
-        evt.insert(new Event("Type1", 2L));
-        evt.insert(new Event("Type2", 1L));
-        evt.insert(new Event("Type3", 1L));
-        evt.insert(new Event("Type4", 1L));
-
-        evt.removeAll("Type1");
-
-        assertEquals(3, evt.getEventArray().size());
-    }
-
-    @Test
-    public void query() {
-        EventStoreImplementation evt = new EventStoreImplementation();
-        evt.insert(new Event("Type1", 1L));//Ok
-        evt.insert(new Event("Type1", 2L));//Ok
-        evt.insert(new Event("Type2", 1L));
-        evt.insert(new Event("Type3", 1L));
-        evt.insert(new Event("Type1", 3L));
-        evt.insert(new Event("Type4", 1L));
-
-        EventIteratorImplementation evtIterator = (EventIteratorImplementation) evt.query("Type1", 1, 3);
-        assertEquals(2, evtIterator.getFiltredList().size());
-        assertEquals("Type1", evtIterator.getFiltredList().get(0).type());
-        assertEquals(1L, evtIterator.getFiltredList().get(0).timestamp());
-        assertEquals("Type1", evtIterator.getFiltredList().get(1).type());
-        assertEquals(2L, evtIterator.getFiltredList().get(1).timestamp());
-    }
-}
+		evtS.insert(evt);
+	}
+	@Test
+	public void testInserctionOfEventSucess() {
+		final EventStoreImplementation evtS = new EventStoreImplementation();
+		final Event evt = new Event("A",1);
+		evtS.insert(evt);
+	}
+	@Test(expected = EventException.class)
+	public void testInserctionOfMapEventsFail() {
+		final Map<String,Event> evtMap = new ConcurrentHashMap<>();
+		@SuppressWarnings("unused")
+		final EventStore evtS = new EventStoreImplementation(evtMap);
+	}
+	@Test
+	public void testInserctionOfMapEventsSucess() {
+		final Map<String,Event> evtMap = new ConcurrentHashMap<>();
+		evtMap.put("A,1", new Event("A",1));
+		@SuppressWarnings("unused")
+		final EventStore evtS = new EventStoreImplementation(evtMap);
+	}
+	@Test(expected = EventException.class)
+	public void removelAllFailTestFail() {
+		final Map<String,Event> evtMap = new ConcurrentHashMap<>();
+		final EventStore evtS = new EventStoreImplementation(evtMap);
+		evtS.removeAll("A");
+	}
+	@Test
+	public void removelAllFailTestSucess() {
+		final Map<String,Event> evtMap = new ConcurrentHashMap<>();
+		evtMap.put("A,1", new Event("A",1));
+		final EventStore evtS = new EventStoreImplementation(evtMap);
+		evtS.removeAll("A");
+	}
+	@Test(expected = EventException.class)
+	public void testQueryFail() {
+		final Map<String,Event> evtMap = new ConcurrentHashMap<>();
+		final EventStore evtS = new EventStoreImplementation(evtMap);
+		evtS.query("A", 1, 2);
+	}
+	@Test
+	public void testQuerySucess() {
+		final Map<String,Event> evtMap = new ConcurrentHashMap<>();
+		evtMap.put("A,1", new Event("A",1));
+		final EventStore evtS = new EventStoreImplementation(evtMap);
+		evtS.query("A", 1, 2);
+	}
+}	

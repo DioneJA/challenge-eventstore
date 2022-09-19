@@ -4,53 +4,75 @@
  */
 package net.intelie.challenges;
 
-import implementation.EventIteratorImplementation;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+
+import CodeImp.EventException;
+import CodeImp.EventIteratorImplementation;
+import CodeImp.EventStoreImplementation;
 
 /**
  *
  * @author bruno
  */
 public class EventIteratorTest {
-
-    @Test
-    public void insert() {
-        EventIteratorImplementation evt = new EventIteratorImplementation();
-        evt.insert(new Event("Type1", 1L));
-        assertEquals(1, evt.getFiltredList().size());
-    }
-
-    @Test
-    public void moveNext() {
-        EventIteratorImplementation evt = new EventIteratorImplementation();
-        assertEquals(false, evt.moveNext());
-
-        evt.insert(new Event("Type1", 1L));
-        assertEquals(true, evt.moveNext());
-    }
-
-    @Test
-    public void current() {
-        EventIteratorImplementation evt = new EventIteratorImplementation();
-
-        evt.insert(new Event("Type1", 1L));
-        evt.insert(new Event("Type2", 1L));
-        evt.moveNext();
-        assertEquals("Type1", evt.current().type());
-        evt.moveNext();
-        assertEquals("Type2", evt.current().type());
-    }
-
-    @Test
-    public void remove() {
-        EventIteratorImplementation evt = new EventIteratorImplementation();
-        evt.insert(new Event("Type1", 1L));
-        evt.insert(new Event("Type2", 1L));
-        evt.moveNext();
-        evt.moveNext();
-        evt.remove();
-        assertEquals(1, evt.getFiltredList().size());
-        assertEquals("Type1", evt.current().type());
-    }
+	@Test(expected = EventException.class)
+	public void testInserctionOfEventStoreFail() {
+		final EventStoreImplementation evt = new EventStoreImplementation();
+		@SuppressWarnings("unused")
+		final EventIterator ectIt = new EventIteratorImplementation(evt.getEventArray());
+	}
+	@Test
+	public void testInserctionOfEventStoreSucess() {
+		final EventStoreImplementation evt = new EventStoreImplementation();
+		evt.insert(new Event("A", 1));
+		@SuppressWarnings("unused")
+		final EventIterator ectIt = new EventIteratorImplementation(evt.getEventArray());
+	}
+	
+	@Test
+	public void testMoveNextFail() {
+		final EventStoreImplementation evt = new EventStoreImplementation();
+		evt.insert(new Event("A", 1));
+		final EventIterator ectIt = new EventIteratorImplementation(evt.getEventArray());
+		ectIt.moveNext();
+		assertFalse(ectIt.moveNext());
+	}
+	@Test
+	public void testMoveSucess() {
+		final EventStoreImplementation evt = new EventStoreImplementation();
+		evt.insert(new Event("A", 1));
+		final EventIterator ectIt = new EventIteratorImplementation(evt.getEventArray());
+		assertTrue(ectIt.moveNext());
+	}
+	@Test(expected = IllegalStateException.class)
+	public void testCurrentFail() {
+		final EventStoreImplementation evt = new EventStoreImplementation();
+		evt.insert(new Event("A", 1));
+		final EventIterator ectIt = new EventIteratorImplementation(evt.getEventArray());
+		ectIt.moveNext();
+		ectIt.moveNext();
+		ectIt.current();
+	}
+	@Test
+	public void testCurrentSucess() {
+		final EventStoreImplementation evt = new EventStoreImplementation();
+		evt.insert(new Event("A", 1));
+		final EventIterator ectIt = new EventIteratorImplementation(evt.getEventArray());
+		ectIt.moveNext();
+		ectIt.current();
+	}
+	@Test
+	public void testRemove() {
+		final EventStoreImplementation evt = new EventStoreImplementation();
+		evt.insert(new Event("A", 1));
+		final EventIteratorImplementation ectIt = new EventIteratorImplementation(evt.getEventArray());
+		final int size = ectIt.getSize();
+		ectIt.moveNext();
+		ectIt.remove();
+		assertEquals(size - 1,ectIt.getSize());
+	}
 }

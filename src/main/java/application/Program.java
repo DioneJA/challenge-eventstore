@@ -4,9 +4,8 @@
  */
 package application;
 
-import implementation.EventIteratorImplementation;
+import CodeImp.EventStoreImplementation;
 import net.intelie.challenges.Event;
-import implementation.EventStoreImplementation;
 import net.intelie.challenges.EventIterator;
 import net.intelie.challenges.EventStore;
 
@@ -18,26 +17,29 @@ public class Program {
 
     public static void main(String[] args) {
 
-        EventStoreImplementation evtI = new EventStoreImplementation();//Declaring object of class EventStoreImplementation
+        EventStore evtI = new EventStoreImplementation();//Declaring object of class EventStoreImplementation
 
         //Inserting objects Events in object evtI
         evtI.insert(new Event("A", 1));
         evtI.insert(new Event("AC", 4));
         evtI.insert(new Event("B", 7));
         evtI.insert(new Event("A", 3));
-        evtI.insert(new Event("A", 5));
+        evtI.insert(new Event("A", 2));
         evtI.insert(new Event("F", 2));
         evtI.insert(new Event("F", 78));
-        evtI.insert(new Event("A", 2));
+        evtI.insert(new Event("F", 5));
+        evtI.insert(new Event("F", 3));
+        evtI.insert(new Event("A", 6));
+        evtI.insert(new Event("A", 8));
+        
         System.out.println("EventStore: \n" + evtI); //Printing all objects Events in evtI
 
-        evtI.removeAll("AC");//Removing objects of type "AC"
-        System.out.println("\n\nEventStore after delete all 'AC' Type's: \n" + evtI);//Printing all objects Events in evtI after delete
-
-        EventIteratorImplementation evtII = (EventIteratorImplementation) evtI.query("A", 1, 3);//Filtering objects with type 'A', StartTime: 1 and EndTime: 3
+        evtI.removeAll("F");//Removing objects of type "AC"
+        System.out.println("\n\nEventStore after delete all 'F' Type's: \n" + evtI);//Printing all objects Events in evtI after delete
+        EventIterator iterator = evtI.query("A", 1, 4);//Filtering objects with type 'A', StartTime: 1 and EndTime: 4
         System.out.println("\n\nPrinting all object in EventIterator after filter: ");
-        while (evtII.moveNext()) {//Printing object EventIterator after fillter
-            System.out.println(evtII.current());
+        while(iterator.moveNext()){
+            System.out.println(iterator.current());
         }
     }
 }
